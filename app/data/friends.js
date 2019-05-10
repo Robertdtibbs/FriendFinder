@@ -1,4 +1,4 @@
-var friends = [
+var friendsArray = [
     {
         name: "Dennis Reynolds",
         photo: "http://bh-s2.azureedge.net/bh-uploads/2016/09/1-Dennis-1050x646.jpg",
@@ -34,4 +34,4 @@ var friends = [
 
 ];
 
-module.exports = friends;
+module.exports = friendsArray;
