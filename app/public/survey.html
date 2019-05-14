@@ -12,6 +12,8 @@
         href="http://www.freeiconspng.com/uploads/burn-burning-fire-flame-heat-icon--icon-search-engine-20.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script> -->
 </head>
 
 
@@ -47,7 +49,7 @@
 
                 <h4><strong>Question 1</strong></h4>
                 <h5>Do you consider yourself a thoughtful person.</h5>
-                <select data-placeholder="" class="chosen-select" id="Q1">
+                <select data-placeholder = ''cd class="chosen-select" id="Q1">
                     <option value=""></option>
                     <option value="1">1 (Strongly Disagree)</option>
                     <option value="2">2</option>
@@ -57,7 +59,7 @@
                 </select>
 
 
-                <h4><strong>Question 2</strong></h4>
+                <!-- <h4><strong>Question 2</strong></h4>
                 <h5>Do you take time to reflect on your actions.</h5>
                 <select data-placeholder="" class="chosen-select" id="Q2">
                     <option value=""></option>
@@ -162,7 +164,7 @@
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5 (Strongly Agree)</option>
-                </select>
+                </select> -->
 
             </div>
         </div>
@@ -214,7 +216,7 @@
 
     </div>
 
-
+<!-- 
 
     <div id="modal1" class="modal">
         <div class="modal-content">
@@ -226,52 +228,77 @@
         <div class="modal-footer">
             <a href="/survey" class="modal-action modal-close waves-effect waves-green btn-flat">Fill Again!</a>
         </div>
-    </div>
+    </div> -->
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('select').material_select();
-            $('.modal').modal({
-                dismissible: false,
-                opacity: .5,
-                inDuration: 300,
-                outDuration: 200,
-                startingTop: '4%',
-                endingTop: '10%'
-            });
-        });
-        // Event submit button
-        $('#submitButton').on('click', function (event) {
+        // var config = {
+        //     ".chosen-select": {},
+        //     ".chosen-select-deselect": {
+        //         allow_single_deselect: true
+        //     },
+        //     ".chosen-select-no-single": {
+        //         disable_search_threshold: 10
+        //     },
+        //     ".chosen-select-no-results": {
+        //         no_results_text: "Oops, nothing found!"
+        //     },
+        //     ".chosen-select-width": {
+        //         width: "95%"
+        //     }
+        // };
+        // for (var selector in config) {
+        //     $(selector).chosen(config[selector]);
+        // }
+        // Capture the form inputs
+        $("#submit").on("click", function (event) {
             event.preventDefault();
-            var userInput = {
-                name: $('#userName').val().trim(),
-                scores: [
-                    $('#Q1').val().trim(),
-                    $('#Q2').val().trim(),
-                    $('#Q3').val().trim(),
-                    $('#Q4').val().trim(),
-                    $('#Q5').val().trim(),
-                    $('#Q6').val().trim(),
-                    $('#Q7').val().trim(),
-                    $('#Q8').val().trim(),
-                    $('#Q9').val().trim(),
-                    $('#Q10').val().trim()
-                ]
-            };
-            // console.log('userInput = ' + JSON.stringify(userInput));
-            // Add user inputs to friends list
-            $.post('/api/friends', userInput)
-                .done(function (data) {
-                    // console.log('response = ' + JSON.stringify(data));
-                    // Set the name and image values of friend match
-                    $('#userMatch').html(data.matchName);
-                    $("#userMatchImage").attr("src", data.matchImage);
-                    // Pop open the modal dialog
-                    $('#modal1').modal('open');
+            // Form validation
+            function validateForm() {
+                var isValid = true;
+                $(".form-control").each(function () {
+                    if ($(this).val() === "") {
+                        isValid = false;
+                    }
                 });
+                $(".chosen-select").each(function () {
+                    if ($(this).val() === "") {
+                        isValid = false;
+                    }
+                });
+                return isValid;
+            }
+            // If all required fields are filled
+            if (validateForm()) {
+                // Create an object for the user"s data
+                var userData = {
+                    name: $("#userName").val(),
+                    // photo: $("#photo").val(),
+                    scores: [
+                        $("#Q1").val(),
+                        // $("#Q2").val(),
+                        // $("#Q3").val(),
+                        // $("#Q4").val(),
+                        // $("#Q5").val(),
+                        // $("#Q6").val(),
+                        // $("#Q7").val(),
+                        // $("#Q8").val(),
+                        // $("#Q9").val(),
+                        // $("#Q10").val()
+                    ]
+                };
+                // AJAX post the data to the friends API.
+                $.post("/api/friends", userData, function (data) {
+                    // Grab the result from the AJAX post so that the best match's name and photo are displayed.
+                    $("#matchName").text(data.name);
+                    // $("#matchImg").attr("src", data.photo);
+                    // Show the modal with the best match
+                    $("#resultsModal").modal("toggle");
+                });
+            } else {
+                alert("Please fill out all fields before submitting!");
+            }
         });
     </script>
-
 
 </body>
 
