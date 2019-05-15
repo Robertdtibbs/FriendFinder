@@ -4,16 +4,11 @@
 <head>
 
     <title>Friend Finder</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
-    <link rel="icon"
-        href="http://www.freeiconspng.com/uploads/burn-burning-fire-flame-heat-icon--icon-search-engine-20.png">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script> -->
+    <link rel="icon" href="http://www.freeiconspng.com/uploads/burn-burning-fire-flame-heat-icon--icon-search-engine-20.png">
+    <script src="https://code.jquery.com/jquery.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
 
 
@@ -27,13 +22,18 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"><strong>Your Name</strong></h3>
+                <h3 class="panel-title"><strong>User Info</strong></h3>
             </div>
             <div class="panel-body">
                 <h4>Your Full Name</h4>
                 <div class="input-group">
                     <input id="userName" class="form-control" type="text" name="name" placeholder="John Smith">
                     <span class="input-group-addon">(Required)</span>
+                </div>
+                <h4>Link to a Photo Image</h4>
+                <div class="input-group">
+                  <input id = "formImage" class="form-control" type="text" name="name" placeholder="http://yourphotolink.com.jpg/">
+                  <span class="input-group-addon">(Required)</span>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                 </select>
 
 
-                <!-- <h4><strong>Question 2</strong></h4>
+                <h4><strong>Question 2</strong></h4>
                 <h5>Do you take time to reflect on your actions.</h5>
                 <select data-placeholder="" class="chosen-select" id="Q2">
                     <option value=""></option>
@@ -164,7 +164,7 @@
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5 (Strongly Agree)</option>
-                </select> -->
+                </select>
 
             </div>
         </div>
@@ -187,23 +187,15 @@
 
         <div id="resultsModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
-
-
                 <div class="modal-content">
-
-
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h2 class="modal-title"><strong>Your New Friend!</strong></h2>
                     </div>
-
-
                     <div class="modal-body">
                         <h2 id="matchName"></h2>
                         <img id="matchImg" src="" alt="Image Not Found" style="max-width: 350px;">
                     </div>
-
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
@@ -215,41 +207,10 @@
 
 
     </div>
-
-<!-- 
-
-    <div id="modal1" class="modal">
-        <div class="modal-content">
-            <h4>Closest Friend Match</h4>
-            <div class="divider"></div>
-            <h5 id="userMatch"></h5>
-            <img id="userMatchImage" class="materialboxed" width="650" src="">
-        </div>
-        <div class="modal-footer">
-            <a href="/survey" class="modal-action modal-close waves-effect waves-green btn-flat">Fill Again!</a>
-        </div>
-    </div> -->
+>
 
     <script type="text/javascript">
-        // var config = {
-        //     ".chosen-select": {},
-        //     ".chosen-select-deselect": {
-        //         allow_single_deselect: true
-        //     },
-        //     ".chosen-select-no-single": {
-        //         disable_search_threshold: 10
-        //     },
-        //     ".chosen-select-no-results": {
-        //         no_results_text: "Oops, nothing found!"
-        //     },
-        //     ".chosen-select-width": {
-        //         width: "95%"
-        //     }
-        // };
-        // for (var selector in config) {
-        //     $(selector).chosen(config[selector]);
-        // }
-        // Capture the form inputs
+     
         $("#submit").on("click", function (event) {
             event.preventDefault();
             // Form validation
@@ -268,11 +229,11 @@
                 return isValid;
             }
             // If all required fields are filled
-            if (validateForm()) {
+            if (validateForm() === true) {
                 // Create an object for the user"s data
-                var userData = {
+                var userInput = {
                     name: $("#userName").val(),
-                    // photo: $("#photo").val(),
+                    photo: $("#photo").val(),
                     scores: [
                         $("#Q1").val(),
                         // $("#Q2").val(),
@@ -286,8 +247,10 @@
                         // $("#Q10").val()
                     ]
                 };
+
+                var currentURL = window.location.origin;
                 // AJAX post the data to the friends API.
-                $.post("/api/friends", userData, function (data) {
+                $.post(currentURL + "/api/friends", userInput, function (data) {
                     // Grab the result from the AJAX post so that the best match's name and photo are displayed.
                     $("#matchName").text(data.name);
                     // $("#matchImg").attr("src", data.photo);
